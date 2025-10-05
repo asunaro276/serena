@@ -219,18 +219,9 @@ jobs:
         run: |
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             sudo apt-get update
-            sudo apt-get install -y cpanminus libdb-dev build-essential
-            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest IO::AIO || {
-              echo "IO::AIO installation failed, using fallback implementation"
-            }
-            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent || {
-              echo "AnyEvent installation failed, continuing without AnyEvent"
-              exit 1
-            }
-            PERL_MM_USE_DEFAULT=1 cpanm --notest --force Perl::LanguageServer || {
-              echo "Perl::LanguageServer installation failed"
-              exit 1
-            }
+            sudo apt-get install -y cpanminus build-essential
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent
+            PERL_MM_USE_DEFAULT=1 cpanm --notest Perl::LanguageServer
           fi
       - name: Install Nix
         if: runner.os != 'Windows'  # Nix doesn't support Windows natively
