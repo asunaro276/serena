@@ -213,23 +213,20 @@ jobs:
             echo "$LUA_LS_DIR/bin" >> $GITHUB_PATH
             rm lua-ls.zip
           fi
-      - name: Install Perl and cpanm
+      - name: Install Perl::LanguageServer
+        if: runner.os != 'Windows'
         shell: bash
         run: |
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             sudo apt-get update
             sudo apt-get install -y cpanminus libdb-dev build-essential
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest IO::AIO || {
+              echo "IO::AIO installation failed, using fallback implementation"
+            }
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent || {
+              echo "AnyEvent installation failed, using fallback implementation"
+            }
           fi
-      - name: Install Perl::LanguageServer
-        shell: bash
-        run: |
-          PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest IO::AIO || {
-            echo "IO::AIO installation failed, using fallback implementation"
-          }
-          PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent || {
-            echo "AnyEvent installation failed, using fallback implementation"
-          }
-          PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest --force Perl::LanguageServer
       - name: Install Nix
         if: runner.os != 'Windows'  # Nix doesn't support Windows natively
         uses: cachix/install-nix-action@v30
