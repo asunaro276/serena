@@ -220,7 +220,7 @@ jobs:
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             sudo apt-get update
             sudo apt-get install -y cpanminus build-essential
-            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest --force AnyEvent IO::AIO
             PERL_MM_USE_DEFAULT=1 cpanm --notest Perl::LanguageServer
           fi
       - name: Install Nix
