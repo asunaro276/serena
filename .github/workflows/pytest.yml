@@ -220,8 +220,13 @@ jobs:
           if [[ "${{ runner.os }}" == "Linux" ]]; then
             sudo apt-get update
             sudo apt-get install -y cpanminus build-essential
-            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest --force AnyEvent IO::AIO || echo "IO::AIO installation failed, continuing without it"
-            PERL_MM_USE_DEFAULT=1 cpanm --notest --force Perl::LanguageServer
+            # Install core dependencies first, allowing optional IO::AIO to fail
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest AnyEvent Moose PadWalker Compiler::Lexer Coro Hash::SafeKeys Data::Dump Class::Refresh
+            # Try to install IO::AIO (optional, may fail on some systems)
+            PERL_MM_USE_DEFAULT=1 PERL_CANARY_STABILITY_NOPROMPT=1 cpanm --notest IO::AIO || echo "IO::AIO installation failed, continuing without it"
+            # Install Perl::LanguageServer without optional dependencies
+            PERL_MM_USE_DEFAULT=1 cpanm --notest --installdeps Perl::LanguageServer || true
+            PERL_MM_USE_DEFAULT=1 cpanm --notest Perl::LanguageServer
           fi
 #      - name: Install Nix
 #        if: runner.os != 'Windows'  # Nix doesn't support Windows natively
