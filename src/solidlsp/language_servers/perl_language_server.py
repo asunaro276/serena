@@ -97,14 +97,7 @@ class PerlLanguageServer(SolidLanguageServer):
                 "See: https://metacpan.org/pod/Perl::LanguageServer"
             )
 
-        # Create logs directory in standard serena location
-        logs_dir = pathlib.Path.home() / ".serena" / "logs"
-        logs_dir.mkdir(parents=True, exist_ok=True)
-        log_file = logs_dir / "perl_language_server.log"
-
-        # Return the command to run Perl::LanguageServer with logging options
-        # Use -- to separate Perl options from program arguments (which go into @ARGV)
-        return f"perl -MPerl::LanguageServer -e 'Perl::LanguageServer::run' -- --log-level 2 --log-file {log_file}"
+        return f"perl -MPerl::LanguageServer -e 'Perl::LanguageServer::run'"
 
     def __init__(
         self, config: LanguageServerConfig, logger: LanguageServerLogger, repository_root_path: str, solidlsp_settings: SolidLSPSettings
