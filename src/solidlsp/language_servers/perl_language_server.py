@@ -85,7 +85,7 @@ class PerlLanguageServer(SolidLanguageServer):
         perl_version = cls._get_perl_version()
         if not perl_version:
             raise RuntimeError(
-                "Perl is not installed. Please install Perl from https://www.perl.org/get.html " "and make sure it is added to your PATH."
+                "Perl is not installed. Please install Perl from https://www.perl.org/get.html and make sure it is added to your PATH."
             )
 
         # Verify Perl::LanguageServer is installed
